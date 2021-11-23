@@ -1,6 +1,5 @@
 #ifndef _READ_FILE_H_
 #define _READ_FILE_H_
-#define _CRT_SECURE_NO_WARNINGS
 #include <vector>
 #include <string>
 using namespace std;
@@ -8,12 +7,14 @@ using namespace std;
 class ReadFile {
 private:
     string filename;
+    vector <vector <int>>euDist;
+    void calculateDistances();
 
 public:
     ReadFile(string file);
     int cities = 0;
     vector <vector <int>>matrix;
-    void createMatrix();
+    void readData();
 };
 
 #endif
