@@ -1,9 +1,5 @@
 #include "aco.h"
-#include <iostream>
-#include <math.h>
-#include <stdio.h>
-#include <time.h>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 ACO::ACO(
@@ -14,9 +10,7 @@ ACO::ACO(
     double beta,
     double rho,
     int initial,
-    int final,
-    int n_ants,
-    int n_iterations
+    int final
 ) : distances(distances),
     taui(tau),
     Q(Q),
@@ -24,9 +18,7 @@ ACO::ACO(
     beta(beta),
     rho(rho),
     initial(initial),
-    final(final),
-    n_ants(n_ants),
-    n_iterations(n_iterations)
+    final(final)
 {
     time(NULL);
     for(int i = 0; i < distances.size(); i++) {
@@ -85,7 +77,7 @@ void ACO::update_pheromones(const vector<vector<int>> paths) {
     for(int i = 0; i < paths.size(); i++) {
         double cost = 0;
         for(int j = 0; j < paths[i].size() - 1; j++)
-            cost += distances[j][j + 1];
+            cost += distances[paths[i][j]][paths[i][j + 1]];
         cost = Q / cost;
         for(int j = 0; j < paths[i].size() - 1; j++){
             pheromones[paths[i][j]][paths[i][j + 1]] += cost;
@@ -94,7 +86,7 @@ void ACO::update_pheromones(const vector<vector<int>> paths) {
     }
 }
 
-vector<int> ACO::shortest_path(bool print_path) {
+vector<int> ACO::shortest_path(int n_ants, int n_iterations, bool print_path) {
     for(int n = 0; n < n_iterations; n++) {
         vector<vector<int>> paths;
         for(int m = 0; m < n_ants; m++) {
@@ -111,10 +103,52 @@ vector<int> ACO::shortest_path(bool print_path) {
         }
         update_pheromones(paths);
     }
+    return get_path();
+}
+
+bool sortbyfirinv(const pair<int,double>& a, const pair<int,double>& b) {
+    return (a.second > b.second);
+}
+
+int ACO::travel_path(int node, std::vector<bool>& visited, std::vector<int>& path) const {
+    visited[node] = true;
+    if(node == final) {
+        path.push_back(node);
+        return 1;
+    }
+    vector<pair<int, double>> probability;
+    for(int i = 0; i < distances.size(); i++) {
+        if(!visited[i] && distances[node][i] != 0)
+            probability.push_back(make_pair(i, pow((double) pheromones[node][i], alpha) * pow((1.0 / (double)distances[node][i]), beta)));
+        else 
+            probability.push_back(make_pair(i, 0));
+    }
+    sort(probability.begin(), probability.end(), sortbyfirinv);
+    for(int i = 0; i < probability.size(); i++) {
+        if(probability[i].second == 0) {
+            visited[node] = false;
+            return -1;
+        }
+        int res = travel_path(probability[i].first, visited, path);
+        if(res == 1) break;
+    }
+    path.push_back(node);
+    return 1;
+}
+
+vector<int> ACO::get_path() const {
     vector<bool> visited(distances.size(), false);
     vector<int> path, r_path;
-    travel(initial, visited, path);
+    travel_path(initial, visited, path);
     for(int i = path.size() - 1; i >= 0; i--)
         r_path.push_back(path[i]);
     return r_path;
+}
+
+int ACO::get_path_cost() const {
+    vector<int> path = get_path();
+    int cost = 0;
+    for(int i = 0; i < path.size() - 1; i++)
+        cost += distances[path[i]][path[i + 1]];
+    return cost;
 }

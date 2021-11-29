@@ -6,7 +6,6 @@
 #include <iostream>
 using namespace std;
 
-inline
 void ReadFile::calculateDistances() {
     float distance = 0;
     for (int i = 0; i < cities; i++) {
@@ -18,12 +17,10 @@ void ReadFile::calculateDistances() {
     }
 }
 
-inline
 ReadFile::ReadFile(string file) {
     filename = file;
 }
 
-inline
 void ReadFile::readData(){
     FILE* file;
     file = fopen(filename.c_str(), "r");
