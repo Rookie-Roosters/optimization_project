@@ -18,7 +18,7 @@ int main() {
 		cout << endl;
 	}
 
-    ACO b(data.matrix, 0.1, 1, 1, 1, 0.01, 0, 3);
+    ACO b(data.matrix, 0.1, 1, 2, 3, 0.1, 0, 0);
     b.shortest_path(100, 100, true);
 
     vector<int> path = b.get_path();
