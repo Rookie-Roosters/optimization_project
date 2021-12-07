@@ -20,8 +20,7 @@ public:
         double alpha,
         double beta,
         double rho,
-        int initial,
-        int final
+        int initial
     );
     std::vector<int> shortest_path(int n_ants, int n_iterations, bool print_paths = false);
     std::vector<std::vector<double>> get_pheromones() const { return pheromones; }

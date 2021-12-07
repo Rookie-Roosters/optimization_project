@@ -2,7 +2,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-inline
 ACO::ACO(
     vector<vector<int>> distances,
     double tau,
@@ -10,16 +9,14 @@ ACO::ACO(
     double alpha,
     double beta,
     double rho,
-    int initial,
-    int final
+    int initial
 ) : distances(distances),
-taui(tau),
-Q(Q),
-alpha(alpha),
-beta(beta),
-rho(rho),
-initial(initial),
-final(final)
+    taui(tau),
+    Q(Q),
+    alpha(alpha),
+    beta(beta),
+    rho(rho),
+    initial(initial)
 {
     srand((unsigned int)time(NULL));
     time(NULL);
@@ -34,7 +31,6 @@ final(final)
     }
 }
 
-inline
 int ACO::travel(int node, vector<bool>& visited, vector<int>& path) const {
     visited[node] = true;
     if (find(visited.begin(), visited.end(), false) == visited.end()) {
@@ -74,7 +70,6 @@ int ACO::travel(int node, vector<bool>& visited, vector<int>& path) const {
     return 1;
 }
 
-inline
 void ACO::update_pheromones(const vector<vector<int>> paths) {
     for (int i = 0; i < pheromones.size(); i++)
         for (int j = 0; j < pheromones[i].size(); j++)
@@ -91,7 +86,6 @@ void ACO::update_pheromones(const vector<vector<int>> paths) {
     }
 }
 
-inline
 vector<int> ACO::shortest_path(int n_ants, int n_iterations, bool print_path) {
     for (int n = 0; n < n_iterations; n++) {
         vector<vector<int>> paths;
@@ -112,12 +106,10 @@ vector<int> ACO::shortest_path(int n_ants, int n_iterations, bool print_path) {
     return get_path();
 }
 
-inline
 bool sortbyfirinv(const pair<int, double>& a, const pair<int, double>& b) {
     return (a.second > b.second);
 }
 
-inline
 int ACO::travel_path(int node, std::vector<bool>& visited, std::vector<int>& path) const {
     visited[node] = true;
     if (find(visited.begin(), visited.end(), false) == visited.end()) {
@@ -145,7 +137,6 @@ int ACO::travel_path(int node, std::vector<bool>& visited, std::vector<int>& pat
     return 1;
 }
 
-inline
 vector<int> ACO::get_path() const {
     vector<bool> visited(distances.size(), false);
     vector<int> path, r_path;
@@ -155,7 +146,6 @@ vector<int> ACO::get_path() const {
     return r_path;
 }
 
-inline
 int ACO::get_path_cost() const {
     vector<int> path = get_path();
     int cost = 0;
